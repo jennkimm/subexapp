@@ -5,6 +5,10 @@ const router = express.Router();
 
 const connection = mysql.createConnection({
    /*db connection info*/
+   host: 'localhost',
+   user: 'root',
+   password: '1234',
+   database: "subexapp"
 });
 
 connection.connect(function(err){

@@ -11,6 +11,7 @@ dotenv.config();
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/loginroutes');
+const subjectRouter = require('./routes/subjectroutes');
 
 const app = express();
 // view engine setup
@@ -43,6 +44,7 @@ app.use(session({
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', loginRouter);
+app.use('/subject', subjectRouter);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
