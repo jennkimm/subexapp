@@ -24,6 +24,7 @@ frontend/yarn-error.log*
 
 ### backend ###
 /backend/node_modules
+/backend/config
 
 ### common ###
 .DS_*
