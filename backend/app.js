@@ -10,9 +10,7 @@ const logger = require('morgan');
 dotenv.config();
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-// const loginRouter = require('./routes/loginroutes');
-
-const { sequelize } = require('./models');
+const loginRouter = require('./routes/loginroutes');
 
 const app = express();
 // view engine setup
@@ -22,32 +20,29 @@ nunjucks.configure('views', {
   express: app,
   watch: true,
 });
-sequelize.sync({ force: false})
-.then(() => {
-  console.log('데이터베이스 연결 성공');
-})
-.catch((err) => {
-  console.log('연결실패\n\n' + err);
-});
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
+// 세션을 사용하여 로그인 상태 유지
 app.use(session({
-  resave: false,
+  key: 'sid',
+  resave: false, // 세션을 항상 저장할지
   saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
+  // 쿠키설정
   cookie: {
-    httpOnly: true,
+    httpOnly: true, // 웹 서버에서만 접근
     secure: false,
-  },
+    maxAge: 24000 * 60 * 60 // 쿠키 유효기간: 24시간
+  }
 }));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-// app.use('/login', loginRouter);
+app.use('/api', loginRouter);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -71,7 +66,6 @@ app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   // render the error page
   res.status(err.status || 500);
   res.render('error');
