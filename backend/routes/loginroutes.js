@@ -2,22 +2,7 @@ var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 const express = require('express');
 const router = express.Router();
-
-const connection = mysql.createConnection({
-   /*db connection info*/
-   host: 'localhost',
-   user: 'root',
-   password: '1234',
-   database: "subexapp"
-});
-
-connection.connect(function(err){
-    if(!err) {
-        console.log("Database is connected ... \n\n");
-    } else {
-        console.log("Error connecting database ... \n\n" + err);
-    }
-});
+const dbConn = require('./dbConnection');
 
 /**
  register
@@ -32,7 +17,7 @@ router.post('/register', async function(req ,res){
         "email": req.body.email,
         "password": encryptedPassword
     }
-    connection.query('INSERT INTO users SET ?',users, function (error, results, fields) {
+    dbConn.query('INSERT INTO users SET ?',users, function (error, results, fields) {
         if (error) {
             res.send({
                 "code": 400,
@@ -53,7 +38,7 @@ router.post('/register', async function(req ,res){
 router.post('/login', async function(req,res){
     var id = req.body.id;
     var password = req.body.password;
-    connection.query('SELECT * FROM users WHERE user_id = ?',[id], async function (error, results, fields) {
+    dbConn.query('SELECT * FROM users WHERE user_id = ?',[id], async function (error, results, fields) {
       if (error) {
         console.log("fail\n");
         res.send({

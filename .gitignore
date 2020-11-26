@@ -26,6 +26,7 @@ frontend/yarn-error.log*
 /backend/node_modules
 /backend/config
 /backend/.env
+/backend/routes/dbConnection.js
 
 ### common ###
 .DS_*
