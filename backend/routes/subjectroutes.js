@@ -10,12 +10,9 @@ const dbConn = require('./dbConnection');
 router.post('/add', async function(req, res, next) {
     let subject_id = req.body.id;
     let subject_name = req.body.name;
-    let start_time = req.body.time_from;
-    let finish_time = req.body.time_to;
     let professor = req.body.professor;
-    let date = req.body.date;
 
-    if (subject_id === 0 || subject_name === 0 || start_time === 0 || finish_time === 0 || professor === 0 || date === 0) {
+    if (subject_id === 0 || subject_name === 0 || professor === 0) {
         req.flash('error', "Something went wrong. At least one of column is null which is not supposed to be null");
         res.render('subject/add', {
             subject_id: subject_id,
@@ -23,20 +20,38 @@ router.post('/add', async function(req, res, next) {
         })
     }
 
+    for (const curr of req.body.time) {
+        const time_form = {
+            subject_id: req.body.id,
+            date: curr.date,
+            begin: curr.begin,
+            end: curr.end
+        }
+        dbConn.query('INSERT INTO time SET ?', time_form, function(err, result) {
+            if(err) {
+                //req.flash('error', err)
+                res.send({
+                    "code": 400,
+                    "failed":"error ocurred" + err
+                });
+            } else {
+                console.log("successfully add time");
+            }
+        })
+    }
+
     const form_data = {
         subject_id: subject_id,
         subject_name: subject_name,
-        time_from: start_time,
-        time_to: finish_time,
-        date: date,
         professor: professor
     }
+
     dbConn.query('INSERT INTO subjects SET ?', form_data, function(err, result){
         if(err) {
-            req.flash('error', err)
+            //req.flash('error', err)
             res.send({
                 "code": 400,
-                "failed":"error ocurred" + error
+                "failed":"error ocurred" + err
             });
         } else {
             res.send({
@@ -62,13 +77,25 @@ router.get('/get/(:id)', function(req, res, next) {
             res.redirect('/subject')
         }
         else  {
-            res.send({
-                subject_id: rows[0].subject_id,
-                subject_name: rows[0].subject_name,
-                date: rows[0].date,
-                professor: rows[0].professer,
-                start_time: rows[0].time_from,
-                finish_time: row[0].time_to
+            dbConn.query('SELECT * FROM time WHERE subject_id = ' + id, function(err, rows, fields) {
+                let obj = {};
+                if (err)
+                    throw err;
+                if (rows.length <= 0) {
+                    obj[0].push("미정");
+                } else {
+                    rows.map(t => {
+                        if (!(t.time_id in obj))
+                            obj[t.time_id] = [];
+                        obj[t.time_id].push(t);
+                    })
+                    res.send({
+                        subject_id: rows[0].subject_id,
+                        subject_name: rows[0].subject_name,
+                        professor: rows[0].time,
+                        subject_time: obj
+                    })
+                }
             })
         }
     })
@@ -98,26 +125,43 @@ router.get('/', function(req, res, next) {
 router.post('/update/:id', function(req, res, next) {
     let id = req.params.id;
     let subject_name = req.body.name;
-    let start_time = req.body.time_from;
-    let finish_time = req.body.time_to;
     let professor = req.body.professor;
-    let date = req.body.date;
+    let time = req.body.subject_time;
 
-    if (subject_name === 0 || start_time === 0 || finish_time === 0 || professor === 0 || date === 0) {
+    if (subject_name === 0 || professor === 0) {
         req.flash('error', "Something went wrong. At least one of column is null which is not supposed to be null");
         res.send({
             subject_id: id,
             subject_name: subject_name
         })
     }
+    for (const curr of time) {
+        const time_form2 = {
+            subject_id: id,
+            time_id: curr.time_id,
+            date: curr.date,
+            begin: curr.begin,
+            end: curr.end
+        }
+        dbConn.query('UPDATE time SET ? WHERE time_id = ' + curr.time_id, time_form2, function(err, result) {
+            if(err) {
+                //req.flash('error', err)
+                res.send({
+                    "code": 400,
+                    "failed":"error ocurred" + err
+                });
+            } else {
+                console.log("successfully update time");
+            }
+        })
+    }
+
     const form_data2 = {
         subject_id: id,
         subject_name: subject_name,
-        time_from: start_time,
-        time_to: finish_time,
-        date: date,
         professor: professor
     }
+
     dbConn.query('UPDATE subjects SET ? WHERE subject_id = ' + id, form_data2, function(err, result) {
         if (err) {
             req.flash('error', err)
@@ -130,7 +174,8 @@ router.post('/update/:id', function(req, res, next) {
             //     "code": 200,
             //     "success":"subjects updated sucessfully"
             // });
-            res.redirect('/subject');
+            console.log("successfully update subject");
+            //res.redirect('/subject');
         }
     })
 })
