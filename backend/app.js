@@ -10,7 +10,7 @@ const logger = require('morgan');
 dotenv.config();
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const loginRouter = require('./routes/loginroutes');
+// const loginRouter = require('./routes/loginroutes');
 const subjectRouter = require('./routes/subjectroutes');
 
 const app = express();
@@ -41,16 +41,17 @@ app.use(session({
   }
 }));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/api', loginRouter);
-app.use('/subject', subjectRouter);
-
+// allow CORS -> 라우터 설정 보다 앞에 있어야 한다.
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+app.use('/', indexRouter);
+app.use('/api', usersRouter);
+// app.use('/api', loginRouter);
+app.use('/subject', subjectRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

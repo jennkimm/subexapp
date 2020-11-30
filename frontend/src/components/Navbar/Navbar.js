@@ -1,37 +1,51 @@
 import React, { useState } from 'react';
-import { Menu, Button, Icon } from 'antd';
+import LeftMenu from './LeftMenu';
+import RightMenu from './RightMenu';
+import { Drawer, Button, Icon } from 'antd';
 import './Navbar.css';
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
+
+    const showDrawer = () => {
+        setVisible(true)
+    };
+
+    const onClose = () => {
+        setVisible(false)
+    };
+
     return (
         <nav className="menu" style={{ width: '100%' }}>
             <div className="menu__logo">
-                Logo
+                <a href="/">SubExApp</a>
             </div>
             <div className="menu__container">
-                <Menu className="menu_left" mode="horizontal">
-                    <Menu.Item key="home">
-                        <a href="/">홈</a>
-                    </Menu.Item>
-                    <Menu.Item key="seeking">
-                        <a href="/">내가 찾는 강의</a>
-                    </Menu.Item>
-                    <Menu.Item key="having">
-                        <a href="/">내가 갖고 있는 강의</a>
-                    </Menu.Item>
-                    <Menu.Item key="exchanging">
-                        <a href="/">1:1 교환을 원하는 강의</a>
-                    </Menu.Item>
-                </Menu>
-                <div className="menu_right">
-                    <span id="logger">Hi anonymous!</span>
-                    <Button
-                        className="menu__mobile-button"
-                        type="primary"
-                    >로그인</Button>
+                <div className="menu_left">
+                    <LeftMenu mode="horizontal"/>
                 </div>
+                <div className="menu_right">
+                    <RightMenu mode="horizontal" />
+                </div>
+                <Button
+                    className="menu__mobile-button"
+                    type="primary"
+                    onClick={showDrawer}
+                >
+                    align-right
+                </Button>
             </div>
+            <Drawer
+          title="Basic Drawer"
+          placement="right"
+          className="menu_drawer"
+          closable={false}
+          onClose={onClose}
+          visible={visible}
+        >
+          <LeftMenu mode="inline" />
+          <RightMenu mode="inline" />
+        </Drawer>
         </nav>
     )
 }
