@@ -40,12 +40,11 @@ function LoginPage(props) {
             id: values.id,
             password: values.password
           };
-
           dispatch(loginUser(dataToSubmit))
             .then(response => {
-                console.log(response.payload);
-              if (response.payload) {
-                window.localStorage.setItem('userId', response.payload.userId);
+              if (JSON.stringify(response.payload.userId)) {
+                console.log("response.payload = "+ JSON.stringify(response.payload.userId));
+                window.localStorage.setItem('userId', JSON.stringify(response.payload.userId));
                 if (rememberMe === true) {
                   window.localStorage.setItem('rememberMe', values.id);
                 } else {

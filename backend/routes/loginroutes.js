@@ -50,9 +50,13 @@ router.post('/login', async function(req,res){
           const comparision = await bcrypt.compare(password, results[0].password)
           if(comparision){
             req.session.userInfo = {
-                id: req.body.id
+                "userId": req.body.id
             };
-            res.json(req.session.userInfo)
+            res.send({
+                "code":200,
+                "success":"login success",
+                "userId": req.body.id
+            })
           }
           else{
             res.send({

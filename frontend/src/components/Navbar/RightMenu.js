@@ -10,15 +10,16 @@ const RightMenu = (props) => {
 
   const logoutHandler = () => {
     axios.get(`${USER_SERVER}/logout`).then((response) => {
-      if (response.status === 200) {
-        props.history.push('/');
+      if (response.status === 200 || response.status === 304) {
+        console.log("logging out...");
+        props.history.push("/");
       } else {
         alert('Log Out Failed');
       }
     });
   };
-
-  if (user.userData) {
+console.log("user="+user.userData);
+  if (!user.userData) {
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="mail">
@@ -30,9 +31,11 @@ const RightMenu = (props) => {
       </Menu>
     );
   } else {
-    console.log(user.userData);
     return (
       <Menu mode={props.mode}>
+        <Menu.Item key="message">
+          <p>{user.userData.userId} 님</p>
+        </Menu.Item>
         <Menu.Item key="logout">
           <a onClick={logoutHandler}>Logout</a>
         </Menu.Item>

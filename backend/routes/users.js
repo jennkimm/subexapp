@@ -5,6 +5,7 @@ const router = express.Router();
 const dbConn = require('./dbConnection');
 
 router.get('/auth', async function(req, res){
+  console.log("/auth " + req.session.userInfo);
   res.send(req.session.userInfo);
 })
 
@@ -55,14 +56,13 @@ router.post('/login', async function(req,res){
           const comparision = await bcrypt.compare(password, results[0].password)
           if(comparision){
             req.session.userInfo = {
-                id: req.body.id,
-                isAuth: false
+                "userId": req.body.id,
+                "isAuth": false
             };
-            console.log(req.session);
-            res.send({
-                "code":200,
-                "success":"login sucessful"
-            })
+            res.json({
+              "userId": req.body.id,
+              "isAuth": false
+            });
           }
           else{
             res.send({
