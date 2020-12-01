@@ -30,7 +30,7 @@ export function loginUser(dataToSubmit){
 export function auth(){
     const request = axios.get(`${USER_SERVER}/auth`)
     .then(response => response.data);
-    console.log("response.data = "+response.data);
+    console.log("auth()");
     return {
         type: AUTH_USER,
         payload: request

@@ -45,19 +45,14 @@ router.post('/login', async function(req,res){
           "code":400,
           "failed": "error occured"
         })
-      }else{
-        console.log("success\n");
+      } else {
         if(results.length >0){
           const comparision = await bcrypt.compare(password, results[0].password)
           if(comparision){
             req.session.userInfo = {
                 id: req.body.id
             };
-            console.log(req.session);
-            res.send({
-                "code":200,
-                "success":"login sucessful"
-            })
+            res.json(req.session.userInfo)
           }
           else{
             res.send({
