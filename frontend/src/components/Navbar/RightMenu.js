@@ -12,14 +12,21 @@ const RightMenu = (props) => {
     axios.get(`${USER_SERVER}/logout`).then((response) => {
       if (response.status === 200 || response.status === 304) {
         console.log("logging out...");
+        window.localStorage.removeItem('userId');
         props.history.push("/");
       } else {
         alert('Log Out Failed');
       }
     });
   };
-console.log("user="+user.userData);
-  if (!user.userData) {
+
+  if (window.localStorage.getItem('userId') && !user.userData) {
+    user.userData = { ...user.userData, userId: window.localStorage.getItem('userId')};
+  }
+
+console.log("window.localStorage = "+window.localStorage.getItem('userId'));
+console.log("user.userData="+user.userData);
+  if (!user.userData || !window.localStorage.getItem('userId')) {
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="mail">
