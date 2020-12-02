@@ -5,8 +5,15 @@ const router = express.Router();
 const dbConn = require('./dbConnection');
 
 router.get('/auth', async function(req, res){
-  console.log("/auth " + req.session.userInfo);
-  res.send(req.session.userInfo);
+  // 세션 만료
+  if (req.session.cookie.expires < new Date()) {
+    res.send({isAuth: false});
+  } else {
+    res.send({isAuth: true});
+  }
+  console.log(req.session);
+  // console.log("/auth " + req.session.cookie.expires);
+  // res.send(req.session.userInfo);
 })
 
 /**
@@ -51,17 +58,16 @@ router.post('/login', async function(req,res){
           "failed": "error occured"
         })
       }else{
-        console.log("success\n");
         if(results.length >0){
           const comparision = await bcrypt.compare(password, results[0].password)
           if(comparision){
             req.session.userInfo = {
-                "userId": req.body.id,
-                "isAuth": false
+                "userId": id,
+                "isAuth": true
             };
             res.json({
-              "userId": req.body.id,
-              "isAuth": false
+              "userId": id,
+              "isAuth": true
             });
           }
           else{

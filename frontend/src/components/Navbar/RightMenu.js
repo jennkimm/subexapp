@@ -3,16 +3,20 @@ import { Menu } from 'antd';
 import axios from 'axios';
 import { USER_SERVER } from '../Config';
 import { withRouter } from 'react-router-dom';
+import { auth } from '../../_actions/user_actions'
 import { useSelector } from 'react-redux';
+import { useDispatch } from "react-redux";
 
 const RightMenu = (props) => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const logoutHandler = () => {
     axios.get(`${USER_SERVER}/logout`).then((response) => {
       if (response.status === 200 || response.status === 304) {
         console.log("logging out...");
         window.localStorage.removeItem('userId');
+        window.localStorage.removeItem('isAuth');
         props.history.push("/");
       } else {
         alert('Log Out Failed');
@@ -21,12 +25,13 @@ const RightMenu = (props) => {
   };
 
   if (window.localStorage.getItem('userId') && !user.userData) {
-    user.userData = { ...user.userData, userId: window.localStorage.getItem('userId')};
+    console.log("tada~");
+    dispatch(auth()).then(async response => {
+      window.localStorage.setItem('isAuth', response.payload.isAuth);
+    })
   }
 
-console.log("window.localStorage = "+window.localStorage.getItem('userId'));
-console.log("user.userData="+user.userData);
-  if (!user.userData || !window.localStorage.getItem('userId')) {
+  if (!user.userData || !window.localStorage.getItem('userId') || !window.localStorage.getItem('isAuth')) {
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="mail">
@@ -41,7 +46,7 @@ console.log("user.userData="+user.userData);
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="message">
-          <p>{user.userData.userId} 님</p>
+          <p>{window.localStorage.getItem('userId')} 님</p>
         </Menu.Item>
         <Menu.Item key="logout">
           <a onClick={logoutHandler}>Logout</a>

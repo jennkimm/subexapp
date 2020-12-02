@@ -37,7 +37,7 @@ app.use(session({
   cookie: {
     httpOnly: true, // 웹 서버에서만 접근
     secure: false,
-    maxAge: 24000 * 60 * 60 // 쿠키 유효기간: 24시간
+    maxAge: 24000 * 60 * 60, // 쿠키 유효기간: 24시간
   }
 }));
 
