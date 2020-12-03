@@ -1,9 +1,10 @@
 import React from 'react';
 import { Menu } from 'antd';
+import { OmitProps } from 'antd/lib/transfer/ListBody';
 
 const LeftMenu = (props) => {
   return (
-    <Menu className="menu_left" mode="horizontal">
+    <Menu mode={props.mode}>
       <Menu.Item key="home">
         <a href="/">홈</a>
       </Menu.Item>

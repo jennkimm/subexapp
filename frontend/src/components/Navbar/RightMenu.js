@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu } from 'antd';
+import { Menu, Button } from 'antd';
 import axios from 'axios';
 import { USER_SERVER } from '../Config';
 import { withRouter } from 'react-router-dom';
@@ -25,7 +25,6 @@ const RightMenu = (props) => {
   };
 
   if (window.localStorage.getItem('userId') && !user.userData) {
-    console.log("tada~");
     dispatch(auth()).then(async response => {
       window.localStorage.setItem('isAuth', response.payload.isAuth);
     })
@@ -44,14 +43,16 @@ const RightMenu = (props) => {
     );
   } else {
     return (
-      <Menu mode={props.mode}>
-        <Menu.Item key="message">
-          <p>{window.localStorage.getItem('userId')} 님</p>
-        </Menu.Item>
-        <Menu.Item key="logout">
-          <a onClick={logoutHandler}>Logout</a>
-        </Menu.Item>
-      </Menu>
+      <div className="userSession">
+        <a href="/profile" className="userName">{window.localStorage.getItem('userId')} 님</a>
+        <Button className="logoutButton" onClick={logoutHandler}>Logout</Button>
+      </div>
+      // <Menu mode={props.mode}>
+      //   <Menu.Item key="message">
+      //     <a>{window.localStorage.getItem('userId')} 님</a>
+      //   </Menu.Item>
+      //   <Button onClick={logoutHandler}>Logout</Button>
+      // </Menu>
     );
   }
 };
