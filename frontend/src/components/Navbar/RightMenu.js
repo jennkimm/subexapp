@@ -16,7 +16,7 @@ const RightMenu = (props) => {
       if (response.status === 200 || response.status === 304) {
         console.log("logging out...");
         window.localStorage.removeItem('userId');
-        window.localStorage.removeItem('isAuth');
+        window.localStorage.setItem('isAuth', false);
         props.history.push("/");
       } else {
         alert('Log Out Failed');

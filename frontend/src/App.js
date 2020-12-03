@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import MainPage from './pages/MainPage';
 import ProfilePage from './pages/ProfilePage';
-import RegisterPage from './pages/RegisterPage';
+import RegisterPage from './components/RegisterPage';
 import Auth from './hoc/auth';
 
 const App = () => {
@@ -12,7 +12,7 @@ const App = () => {
       <Route component={Auth(MainPage, null)} path="/" exact />
       <Route component={Auth(LoginPage, true)} path="/login" />
       <Route component={Auth(ProfilePage, false)} path="/profile" />
-      <Route component={Auth(RegisterPage, false)} path="/register" />
+      <Route component={Auth(RegisterPage, true)} path="/register" />
     </>
   )
 }

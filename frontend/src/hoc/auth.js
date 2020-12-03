@@ -19,6 +19,7 @@ export default function (ComposedClass, reload, adminRoute = null) {
                         props.history.push('/')
                     }
                     else {
+                        console.log(reload);
                         if (reload === false) {
                             props.history.push('/')
                         }
