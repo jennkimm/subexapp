@@ -12,6 +12,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 // const loginRouter = require('./routes/loginroutes');
 const subjectRouter = require('./routes/subjectroutes');
+const sugangRouter = require('./routes/sugangroutes');
 
 const app = express();
 // view engine setup
@@ -52,6 +53,7 @@ app.use('/', indexRouter);
 app.use('/api', usersRouter);
 // app.use('/api', loginRouter);
 app.use('/subject', subjectRouter);
+app.use('/sugang', sugangRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

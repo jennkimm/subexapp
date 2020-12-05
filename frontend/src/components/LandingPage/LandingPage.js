@@ -21,7 +21,7 @@ function LandingPage() {
 
     const renderCards = Subjects.map((subject, index) => {
         return ( 
-            <Col lg={6} md={8} xs={24}>
+            <Col key={index} lg={6} md={8} xs={24}>
                 <span>과목명: {subject.subject_name} </span><br />
                 <span>담당 교수: {subject.professor} </span><br />
                 <hr />
