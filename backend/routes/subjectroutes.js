@@ -20,26 +20,6 @@ router.post('/add', async function(req, res, next) {
         })
     }
 
-    for (const curr of req.body.time) {
-        const time_form = {
-            subject_id: req.body.id,
-            date: curr.date,
-            begin: curr.begin,
-            end: curr.end
-        }
-        dbConn.query('INSERT INTO time SET ?', time_form, function(err, result) {
-            if(err) {
-                //req.flash('error', err)
-                res.send({
-                    "code": 400,
-                    "failed":"error ocurred" + err
-                });
-            } else {
-                console.log("successfully add time");
-            }
-        })
-    }
-
     const form_data = {
         subject_id: subject_id,
         subject_name: subject_name,
@@ -60,6 +40,25 @@ router.post('/add', async function(req, res, next) {
             });
         }
     })
+
+    for (const curr of req.body.time) {
+        const time_form = {
+            subject_id: req.body.id,
+            date: curr.date,
+            begin: curr.begin,
+            end: curr.end
+        }
+        dbConn.query('INSERT INTO time SET ?', time_form, function(err, result) {
+            if(err) {
+                res.send({
+                    "code": 400,
+                    "failed":"error ocurred" + err
+                });
+            } else {
+                console.log("successfully add time");
+            }
+        })
+    }
 })
 
 /**
@@ -78,16 +77,14 @@ router.get('/get/(:id)', function(req, res, next) {
         }
         else  {
             dbConn.query('SELECT * FROM time WHERE subject_id = ' + id, function(err, rows, fields) {
-                let obj = {};
+                let obj = [];
                 if (err)
                     throw err;
                 if (rows.length <= 0) {
-                    obj[0].push("미정");
+                    obj.push({ans: "미정"});
                 } else {
                     rows.map(t => {
-                        if (!(t.time_id in obj))
-                            obj[t.time_id] = [];
-                        obj[t.time_id].push(t);
+                        obj.push(t);
                     })
                     res.send({
                         subject_id: rows[0].subject_id,
