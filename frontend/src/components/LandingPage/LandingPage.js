@@ -42,32 +42,25 @@ function LandingPage() {
     //     );
     // })
 
-    const renderCards_dropping = Subjects.map((subject, index) => {
-        Sugang.map((sugang, index) => {
-            if(Sugang.wanna_drop === false) {
-                return ( 
-                    <Col key={index} lg={6} md={8} xs={24}>
-                        <span>과목명: {subject.subject_name} </span><br />
-                        <span>담당 교수: {subject.professor} </span><br />
-                        <hr />
-                    </Col>
-                );
-            }
+    const renderCards_having = Sugang.map((sugang, index) => {
+        return ( 
+            <Col key={index} lg={6} md={8} xs={24}>
+                <span>과목아이디: {sugang.subject_id} </span><br />
+                <hr />
+            </Col>
+            );
         })
-    })
+    }
 
-    const renderCards_having = Subjects.map((subject, index) => {
-        Sugang.map((sugang, index) => {
+    const renderCards_dropping = Sugang.map((sugang, index) => {
             if(Sugang.wanna_drop === true) {
-                return ( 
-                    <Col key={index} lg={6} md={8} xs={24}>
-                        <span>과목명: {subject.subject_name} </span><br />
-                        <span>담당 교수: {subject.professor} </span><br />
-                        <hr />
-                    </Col>
-                );
-            }
-        })
+                return (
+                <Col key={index} lg={6} md={8} xs={24}>
+                    <span>과목아이디: {sugang.subject_id} </span><br />
+                    <hr />
+                </Col>
+            );
+        }
     })
 
     return (

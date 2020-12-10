@@ -68,7 +68,7 @@ router.get("/get/(:id)", function (req, res, next) {
     async function (err, rows, fields) {
       if (err) throw err;
       if (rows.length <= 0) {
-        req.flash("error", "Sugang info not found with user_id = " + id);
+        // req.flash("error", "Sugang info not found with user_id = " + id);
         res.redirect("/sugang");
       } else {
         async function loop(rows) {
