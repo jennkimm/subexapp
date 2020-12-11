@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Card, Avatar, Col, Typography, Row } from 'antd';
 import axios from 'axios';
 import { USER_SERVER } from '../Config';
-
 const { Title } = Typography;
 
 function LandingPage() {
@@ -32,36 +31,25 @@ function LandingPage() {
             })
     }, [])
 
-    // const renderCards_dropping = Sugang.map((sugang, index) => {
-    //     return ( 
-    //         <Col key={index} lg={6} md={8} xs={24}>
-    //             <span>과목 아이디: {sugang.subject_id} </span><br />
-    //             <span>유저아이디: {sugang.user_id} </span><br />
-    //             <hr />
-    //         </Col>
-    //     );
-    // })
-
     const renderCards_having = Sugang.map((sugang, index) => {
-        return ( 
+            return ( 
             <Col key={index} lg={6} md={8} xs={24}>
-                <span>과목아이디: {sugang.subject_id} </span><br />
+                <span>과목명: {sugang.subject_name} </span><br />
                 <hr />
             </Col>
             );
         })
-    }
 
     const renderCards_dropping = Sugang.map((sugang, index) => {
-            if(Sugang.wanna_drop === true) {
+            if(sugang.wanna_drop === 1) {
                 return (
                 <Col key={index} lg={6} md={8} xs={24}>
-                    <span>과목아이디: {sugang.subject_id} </span><br />
+                    <span>과목아이디: {sugang.subject_name} </span><br />
                     <hr />
                 </Col>
-            );
-        }
-    })
+                )
+            }
+        })
 
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
@@ -79,4 +67,4 @@ function LandingPage() {
     )
 }
 
-export default LandingPage
+export default LandingPage;
