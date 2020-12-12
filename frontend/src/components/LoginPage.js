@@ -44,7 +44,7 @@ function LoginPage(props) {
             .then(response => {
               if (JSON.stringify(response.payload.userId)) {
                 console.log("response.payload = "+ JSON.stringify(response.payload.userId));
-                window.localStorage.setItem('userId', JSON.stringify(response.payload.userId));
+                window.localStorage.setItem('userId', response.payload.userId);
                 window.localStorage.setItem('isAuth', JSON.stringify(response.payload.isAuth));
                 if (rememberMe === true) {
                   window.localStorage.setItem('rememberMe', values.id);

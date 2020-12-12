@@ -76,20 +76,20 @@ router.get('/get/(:id)', function(req, res, next) {
             res.redirect('/subject')
         }
         else  {
-            dbConn.query('SELECT * FROM time WHERE subject_id = ' + id, function(err, rows, fields) {
+            dbConn.query('SELECT * FROM time WHERE subject_id = ' + id, function(err, rows2, fields) {
                 let obj = [];
                 if (err)
                     throw err;
-                if (rows.length <= 0) {
+                if (rows2.length <= 0) {
                     obj.push({ans: "미정"});
                 } else {
-                    rows.map(t => {
+                    rows2.map(t => {
                         obj.push(t);
                     })
                     res.send({
-                        subject_id: rows[0].subject_id,
+                        subject_id: rows2[0].subject_id,
                         subject_name: rows[0].subject_name,
-                        professor: rows[0].time,
+                        professor: rows[0].professor,
                         subject_time: obj
                     })
                 }
@@ -177,7 +177,7 @@ router.post('/update/:id', function(req, res, next) {
     })
 })
 
- /**
+/**
  * delete
  */
 router.get('/delete/:id', function(req, res, next) {

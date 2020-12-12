@@ -83,7 +83,7 @@ router.get("/get/(:id)", function (req, res, next) {
                   } else {
                     let a = {
                         user_id: id,
-                        subject_id: k.subject_name,
+                        subject_id: k.subject_id,
                         sugang_id: k.sugang_id,
                         timetable_number: k.timetable_number,
                         subject_name: await rows[0].subject_name,
