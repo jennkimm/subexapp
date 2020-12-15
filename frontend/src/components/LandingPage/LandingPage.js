@@ -86,6 +86,19 @@ function LandingPage() {
       });
   }, []);
 
+  const deleteSugang = ((id) => {
+    axios
+    .post(`http://localhost:4000/sugang/delete/`+id)
+    .then((response) => {
+      if (response.data) {
+          console.log("delete");
+      }
+      else {
+        alert('Failed to get Sugang Info');
+      }
+    });
+  })
+
   const renderCards = Sugang.map((sugang, index) => {
     if (sugang.sugang.timetable_number === TableNumber) {
       return (
@@ -103,7 +116,7 @@ function LandingPage() {
           {/* 여기를 sugang 정보 수정한 것을 state 로 가지고 있어야 함 -> 그리고 서버 post 요청 보내기 */}
         <TextArea rows={4} />
       </Modal>
-            <Button>삭제</Button>
+            <Button onClick={deleteSugang(sugang.sugang.sugang_id)}>삭제</Button>
           <hr />
         </Col>
       );
