@@ -1,20 +1,29 @@
-const createError = require('http-errors');
 const express = require('express');
+const app = express();
+const createError = require('http-errors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
 const logger = require('morgan');
+const flash = require('connect-flash');
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+const mongoose = require("mongoose");
+const connect = mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB Connected...'))
+  .catch(err => console.log(err));
+
+const { Chat } = require("./models/Chat")
 
 dotenv.config();
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-// const loginRouter = require('./routes/loginroutes');
 const subjectRouter = require('./routes/subjectroutes');
 const sugangRouter = require('./routes/sugangroutes');
+app.use('/api/chat', require('./routes/chatroutes'));
 
-const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -24,6 +33,7 @@ nunjucks.configure('views', {
 });
 
 app.use(logger('dev'));
+app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -75,6 +85,31 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error');
 });
+
+io.on("connection", socket => {
+  socket.on("Input Chat Message", msg => {
+    connect.then(db => {
+      try {
+          let chat = new Chat({ message: msg.chatMessage, sender:msg.userId, type: msg.type })
+
+          chat.save((err, doc) => {
+            console.log(doc)
+            if(err) return res.json({ success: false, err })
+
+            Chat.find({ "_id": doc._id })
+            .populate("sender")
+            .exec((err, doc)=> {
+
+                return io.emit("Output Chat Message", doc);
+            })
+          })
+      } catch (error) {
+        console.error(error);
+      }
+    })
+   })
+
+})
 
 const port = process.env.PORT || 4000;
 
