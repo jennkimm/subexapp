@@ -9,11 +9,16 @@ const dotenv = require('dotenv');
 const logger = require('morgan');
 const flash = require('connect-flash');
 const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
 const mongoose = require("mongoose");
-const connect = mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+const connect = mongoose.connect("mongodb+srv://root:1234@cluster0.yqy3k.mongodb.net", { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB Connected...'))
-  .catch(err => console.log(err));
+  .catch(err => console.log("This is MongoDB connection error = "+err));
 
 const { Chat } = require("./models/Chat")
 
@@ -22,7 +27,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const subjectRouter = require('./routes/subjectroutes');
 const sugangRouter = require('./routes/sugangroutes');
-app.use('/api/chat', require('./routes/chatroutes'));
+const chatRouter = require('./routes/chatroutes');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -61,9 +66,9 @@ app.use((req, res, next) => {
 
 app.use('/', indexRouter);
 app.use('/api', usersRouter);
-// app.use('/api', loginRouter);
 app.use('/subject', subjectRouter);
 app.use('/sugang', sugangRouter);
+app.use('/api/chat', chatRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -113,6 +118,6 @@ io.on("connection", socket => {
 
 const port = process.env.PORT || 4000;
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log('%d 번 포트에서 대기중', port);
 });

@@ -5,6 +5,7 @@ import LandingPage from './components/LandingPage/LandingPage';
 import ProfilePage from './pages/ProfilePage';
 import RegisterPage from './components/RegisterPage';
 import Navbar from './components/Navbar/Navbar';
+import ChatPage from './components/Chat/ChatPage';
 import Auth from './hoc/auth';
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
           <Route component={Auth(LoginPage, true)} path="/login" />
           <Route component={Auth(ProfilePage, false)} path="/profile" />
           <Route component={Auth(RegisterPage, true)} path="/register" />
+          <Route exact path="/chat" component={Auth(ChatPage, null)} />
         </Switch>
       </div>
     </Suspense>
